@@ -17,6 +17,8 @@ class Tableau1 extends Phaser.Scene {
 
         //alert('Cliquez sur OK pour commencer');
 
+        /**new Joueur(lives,score);**/
+
         this.largeur = 800
 
         //Mur Haut
@@ -42,8 +44,8 @@ class Tableau1 extends Phaser.Scene {
         this.balle.setDisplaySize(20, 20);
         this.balle.setTintFill(0xffffff);
         this.balle.body.setBounce(1.2, 1.2);
-        this.balle.body.setVelocityX(Phaser.Math.Between(50, 100));
-        this.balle.body.setVelocityY(Phaser.Math.Between(-100, -50));
+        this.balle.body.setVelocityX(Phaser.Math.Between(-50,50));
+        this.balle.body.setVelocityY(Phaser.Math.Between(50,100));
         this.balle.body.setMaxVelocity(1000, 1000);
 
         //Raquette
@@ -62,17 +64,14 @@ class Tableau1 extends Phaser.Scene {
            me.rebond(me.raquette)
         });
 
+
+        this.creerBrique()
         this.initKeyboard()
 
     }
 
     rebond(raquette){
 
-        let me=this;
-
-        /**console.log(raquette.y)
-        console.log(me.balle.y)
-        console.log((me.balle.y)-(raquette.y))**/
 
         let largeurRaquette = raquette.displayWidth;
 
@@ -85,8 +84,38 @@ class Tableau1 extends Phaser.Scene {
 
         this.balle.setVelocityX( this.balle.body.velocity.y + positionRelativeRaquette * largeurRaquette)
 
+
     }
 
+    creerBrique(){
+        let me = this;
+        let brique;
+
+        for(let y=0;y<5;y++){
+            for(let x=0;x<9;x++){
+                console.log("brique",x,y)
+                brique = this.physics.add.sprite( 60*x+130, 30*y+150, 'square').setOrigin(0,0);
+                brique.setDisplaySize(60,30);
+                brique.body.setAllowGravity(false);
+                brique.setImmovable(true);
+            }
+        }
+
+        
+
+        /**this.physics.add.collider(this.balle, brique, function () {
+            console.log("touche brique");
+            me.rebond(me.obstacles[i]);
+            me.disparait(me.obstacles[i]);
+        });**/
+    }
+
+    disparait(obstacle){
+
+        obstacle.body.setEnable(false);
+        obstacle.setVisible(false);
+        obstacle.ombre.setVisible(false);
+    }
     initKeyboard(){
         let me=this;
         this.input.keyboard.on('keydown', function(kevent)
